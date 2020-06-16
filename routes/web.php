@@ -17,4 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/Category','CategoryController@index');
+Route::get('/produk' , 'BEController@index');
+
+Route::get('/produk/ajax','BEController@showData');
