@@ -20,3 +20,5 @@ Route::get('/', function () {
 Route::get('/produk' , 'BEController@index');
 
 Route::get('/produk/ajax','BEController@showData');
+
+Route::post('/produk/newproduk','BEController@newproduk');

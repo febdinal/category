@@ -11,8 +11,6 @@
         <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
         <!-- Overlay Scroll Bars -->
         <link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-
-
         <!-- SELECT2 -->
         <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
@@ -27,37 +25,50 @@
                     <div class="name container">
                         <h2> Product </h2>
                         <b> New Product </b>
+                    <form action="/produk/newproduk" method="POST">
                         {{ csrf_field() }}
                     <div class="form-group" >
                         <lable for="nama"> Title Product : </lable>
-                        <input type="text" class="form-control" id="" placeholder="Enter Product" name="nama_toko">
+                        <input type="text" class="form-control" id="" placeholder="Enter Product" name="title_product">
                     </div>
                     <div class="form-group" >
                         <lable for=" "> Brands : </lable>
-                        <select id="cars" name="cars">
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="fiat">Fiat</option>
-                            <option value="audi">Audi</option>
+                        <select id="brands" name="brands" placeolder="--Select Brands--">
+                            <option value="eiger">Eiger</option>
+                            <option value="lv">LV</option>
+                            <option value="supreme">Supreme</option>
+                            <option value="gucci">GUCCI</option>
                         </select>
                     </div>
                     <div class="form-group" >
                         <lable for=" "> Gender : </lable>
-                        <select id="cars" name="cars">
+                        <select id="gender" name="gender" placeholder="--Select Gender--">
                             <option value="wanita">Wanita</option>
                             <option value="pria">Pria</option>
                         </select>
                     </div>
                     <div class="form-group" >
                         <lable for=" "> Category : </lable>
-                        <select id="cars" name="cars">
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
+                        <select id="category" name="category">
+                            <option value="pakaian">Pakaian</option>
+                            <option value="art">ART</option>
+                            <option value="akasesoris">Aksesoris</option>
                         </select>
                     </div>
-                    <textarea name="message" rows="10" cols="30" placeholder="Enter Description"></textarea>
+                    <div class="form-group" >
+                        <lable for=" "> SubCategory : </lable>
+                        <select id="subcategory" name="subcategory">
+                            <option value="tas">Tas</option>
+                            <option value="kaos">Kaos</option>
+                            <option value="hoodie">Hoodie</option>
+                            <option value="stiker">stiker</option>
+                        </select>
+                    </div>
+                    <textarea id="keterangan" name="keterangan" rows="10" cols="30" 
+                              placeholder="Enter Description"></textarea>
                     <input type="submit" class="btn btn-primary">
                     </div>
+                    </form>
                 </table>
             </div>
             <div class="col-8">

@@ -11,4 +11,5 @@ class tableBE extends Model
     protected $fillable = [
         'id','title_product','brands','gender','category','subcategory','keterangan'
     ];
+    public $timestamps = false;
 }

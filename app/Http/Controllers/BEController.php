@@ -22,6 +22,19 @@ class BEController extends Controller
                 return '<button class="btn btn-danger"> Hapus </button>';
             })
             ->make(true);
-        
+    }
+
+    public function newproduk(Request $request)
+    {
+        $tabelBE = tableBE::create([
+            'title_product' => $request->title_product,
+            'brands' => $request->brands,
+            'gender' => $request->gender,
+            'category' => $request->category,
+            'subcategory' => $request->subcategory,
+            'keterangan' => $request->keterangan,
+        ]);
+        return redirect('/produk/ajax');
+     
     }
 }
