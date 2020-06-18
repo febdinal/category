@@ -37,4 +37,10 @@ class BEController extends Controller
         return redirect('/produk/ajax');
      
     }
+    public function hapus($id)
+    {
+        tabelBE::find($id)->delete();
+    
+        return redirect(('/produk'));
+    }
 }

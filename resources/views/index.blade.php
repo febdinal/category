@@ -6,7 +6,6 @@
         <title>Admin Product</title>
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('js/app.js') }}"> 
-    
         <!-- Font Awesome Icons -->
         <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
         <!-- Overlay Scroll Bars -->
@@ -25,7 +24,6 @@
                     <div class="name container">
                         <h2> Product </h2>
                         <b> New Product </b>
-                    <form action="/produk/newproduk" method="POST">
                         {{ csrf_field() }}
                     <div class="form-group" >
                         <lable for="nama"> Title Product : </lable>
@@ -66,7 +64,7 @@
                     </div>
                     <textarea id="keterangan" name="keterangan" rows="10" cols="30" 
                               placeholder="Enter Description"></textarea>
-                    <input type="submit" class="btn btn-primary">
+                    <input type="submit" class="btn btn-primary" value="Kirim" > </input>
                     </div>
                     </form>
                 </table>
@@ -74,6 +72,7 @@
             <div class="col-8">
                 <table class="table table-bordered" id="tabelBE">
                     <thead>
+                        <td colspan="8" ><center><h3> List Product</h3></td>
                         <tr>
                             <th>Id</th>
                             <th>Title Product</th>
@@ -101,7 +100,6 @@
 
         <script>
             $(function() {
-                // Console.log('ok');
                 $('#tabelBE').DataTable({
                     processing: true,
                     serverSide: true,
@@ -118,7 +116,37 @@
                     ]
                 });
             });
-        </script>
 
+            $('#submitButton').click( function() {
+                $.post( '/produk/newproduk', $('#tabelBE').serialize(), function(data) {
+                        // ... do something with response from server
+                },
+                        'json' // I expect a JSON response
+                      );
+            });
+
+            $('#submitButton').click( function() {
+                  $.ajax({
+                  url: '/produk/ajax',
+                  type: 'post',
+                  dataType: 'json',
+                  data: $('#tabelBE').serialize(),
+                  success: function(data) {
+                      // ... do something with the data...
+                      columns: [
+                        { data: 'id', name: 'id' },
+                        { data: 'title_product', name: 'title_product' },
+                        { data: 'brands', name: 'brands' },
+                        { data: 'gender', name: 'gender' },
+                        { data: 'category', name: 'category' },
+                        { data: 'subcategory', name: 'subcategory' },
+                        { data: 'keterangan', name: 'keterangan' },
+                        { data: 'action' , name: 'action' ,orderable:false , searchable:false}
+                        ]
+                        }
+                   });
+              });
+
+        </script>   
     </body>
 </html>
