@@ -21,6 +21,7 @@ Route::get('/produk' , 'BEController@index');
 
 Route::get('/produk/ajax','BEController@showData');
 
-Route::post('/produk/newproduk','BEController@newproduk');
+Route::post('/produk/new','BEController@newproduk');
 
-Route::get('/produk/hapus/{id}','BEController@hapus');
+Route::post('/produk/hapus/{id}','BEController@hapus')
+      ->name('delete');

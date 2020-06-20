@@ -19,7 +19,9 @@ class BEController extends Controller
         $datas = tableBE::all();
         return DataTables::of($datas)
             ->addColumn('action', function($datas) {
-                return '<button class="btn btn-danger"> Hapus </button>';
+                return '
+                    <button onclick="hapus('.$datas->id.')" class="btn btn-xs btn-danger">Delete</button>
+                ';
             })
             ->make(true);
     }
@@ -34,13 +36,16 @@ class BEController extends Controller
             'subcategory' => $request->subcategory,
             'keterangan' => $request->keterangan,
         ]);
-        return redirect('/produk/ajax');
-     
+        return response()->json([
+            'success' => 'Data Berhasil Ditambahkan!'
+        ]);
     }
-    public function hapus($id)
+    public function hapus(request $request)
     {
-        tabelBE::find($id)->delete();
-    
-        return redirect(('/produk'));
+        if($request->ajax())
+        {
+            tableBE::where('id',$request->id)->delete();
+            echo '<div class="alert" alert-success> Success Delete Data</div>';   
+        }
     }
 }

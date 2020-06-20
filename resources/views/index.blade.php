@@ -3,6 +3,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <title>Admin Product</title>
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('js/app.js') }}"> 
@@ -24,49 +26,53 @@
                     <div class="name container">
                         <h2> Product </h2>
                         <b> New Product </b>
-                        {{ csrf_field() }}
-                    <div class="form-group" >
-                        <lable for="nama"> Title Product : </lable>
-                        <input type="text" class="form-control" id="" placeholder="Enter Product" name="title_product">
+                        <form id="productForm">
+                            <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+
+                            <div class="form-group" >
+                                <lable for="nama"> Title Product : </lable>
+                                <input type="text" class="form-control" id="" placeholder="Enter Product" name="title_product">
+                            </div>
+                            <div class="form-group" >
+                                <lable for=" "> Brands : </lable>
+                                <select id="brands" name="brands" placeolder="--Select Brands--">
+                                    <option value="eiger">Eiger</option>
+                                    <option value="lv">LV</option>
+                                    <option value="supreme">Supreme</option>
+                                    <option value="gucci">GUCCI</option>
+                                </select>
+                            </div>
+                            <div class="form-group" >
+                                <lable for=" "> Gender : </lable>
+                                <select id="gender" name="gender" placeholder="--Select Gender--">
+                                    <option value="wanita">Wanita</option>
+                                    <option value="pria">Pria</option>
+                                </select>
+                            </div>
+                            <div class="form-group" >
+                                <lable for=" "> Category : </lable>
+                                <select id="category" name="category">
+                                    <option value="pakaian">Pakaian</option>
+                                    <option value="art">ART</option>
+                                    <option value="akasesoris">Aksesoris</option>
+                                </select>
+                            </div>
+                            <div class="form-group" >
+                                <lable for=" "> SubCategory : </lable>
+                                <select id="subcategory" name="subcategory">
+                                    <option value="tas">Tas</option>
+                                    <option value="kaos">Kaos</option>
+                                    <option value="hoodie">Hoodie</option>
+                                    <option value="stiker">stiker</option>
+                                </select>
+                            </div>
+                            <div>
+                                <textarea id="keterangan" name="keterangan" rows="10" cols="30" 
+                                    placeholder="Enter Description"></textarea>
+                                <input id="submitButton" type="button" class="btn btn-primary" value="Kirim"/>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group" >
-                        <lable for=" "> Brands : </lable>
-                        <select id="brands" name="brands" placeolder="--Select Brands--">
-                            <option value="eiger">Eiger</option>
-                            <option value="lv">LV</option>
-                            <option value="supreme">Supreme</option>
-                            <option value="gucci">GUCCI</option>
-                        </select>
-                    </div>
-                    <div class="form-group" >
-                        <lable for=" "> Gender : </lable>
-                        <select id="gender" name="gender" placeholder="--Select Gender--">
-                            <option value="wanita">Wanita</option>
-                            <option value="pria">Pria</option>
-                        </select>
-                    </div>
-                    <div class="form-group" >
-                        <lable for=" "> Category : </lable>
-                        <select id="category" name="category">
-                            <option value="pakaian">Pakaian</option>
-                            <option value="art">ART</option>
-                            <option value="akasesoris">Aksesoris</option>
-                        </select>
-                    </div>
-                    <div class="form-group" >
-                        <lable for=" "> SubCategory : </lable>
-                        <select id="subcategory" name="subcategory">
-                            <option value="tas">Tas</option>
-                            <option value="kaos">Kaos</option>
-                            <option value="hoodie">Hoodie</option>
-                            <option value="stiker">stiker</option>
-                        </select>
-                    </div>
-                    <textarea id="keterangan" name="keterangan" rows="10" cols="30" 
-                              placeholder="Enter Description"></textarea>
-                    <input type="submit" class="btn btn-primary" value="Kirim" > </input>
-                    </div>
-                    </form>
                 </table>
             </div>
             <div class="col-8">
@@ -82,7 +88,7 @@
                             <th>SubCategory</th>
                             <th>Keterangan</th>
                             <th>Action</th>
-                        </tr>
+                            
                     </thead>
                 </table>
             </div>
@@ -98,7 +104,20 @@
         <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
         <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
-        <script>
+        <script type="text/javascript">
+            function hapus(id) {
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},    
+                    url: "/produk/hapus/{id}",
+                    method:"post",
+                    data:{"id":id, "_token":"{{ csrf_token() }}"},
+                    success: function(data)
+                    {
+                        alert('berhasil gan');
+                    }
+                })
+            }
+
             $(function() {
                 $('#tabelBE').DataTable({
                     processing: true,
@@ -117,35 +136,43 @@
                 });
             });
 
-            $('#submitButton').click( function() {
-                $.post( '/produk/newproduk', $('#tabelBE').serialize(), function(data) {
-                        // ... do something with response from server
-                },
-                        'json' // I expect a JSON response
-                      );
-            });
+            // $('#submitButton').click( function() {
+            //     $.post( '/produk/newproduk', $('#tabelBE').serialize(), function(data) {
+            //             // ... do something with response from server
+            //     },
+            //             'json' // I expect a JSON response
+            //           );
+            // });
 
             $('#submitButton').click( function() {
-                  $.ajax({
-                  url: '/produk/ajax',
-                  type: 'post',
-                  dataType: 'json',
-                  data: $('#tabelBE').serialize(),
-                  success: function(data) {
-                      // ... do something with the data...
-                      columns: [
-                        { data: 'id', name: 'id' },
-                        { data: 'title_product', name: 'title_product' },
-                        { data: 'brands', name: 'brands' },
-                        { data: 'gender', name: 'gender' },
-                        { data: 'category', name: 'category' },
-                        { data: 'subcategory', name: 'subcategory' },
-                        { data: 'keterangan', name: 'keterangan' },
-                        { data: 'action' , name: 'action' ,orderable:false , searchable:false}
-                        ]
-                        }
-                   });
-              });
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    url: '/produk/new',
+                    type: 'post',
+                    dataType: 'json',
+                    data: $('#productForm').serialize(),
+                    success: function(data) {
+                        $('#tabelBE').DataTable().ajax.reload();
+                    }
+                });
+            });
+
+            // $(document).on('click', '.delete',function(){
+            //     var id = $(this).attr("id");
+            //    if(confirm("wish to delete?"))
+            //    { 
+            //         $.ajax({
+            //                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},    
+            //                 url: "/produk/hapus/{id}",
+            //                 method:"post",
+            //                 data:{"id":id, "_token":"{{ csrf_token() }}"},
+            //                 success: function(data)
+            //                 {
+            //                     $('#message').html(data);
+            //                 }
+            //         })
+            //     }
+            // });     
 
         </script>   
     </body>
