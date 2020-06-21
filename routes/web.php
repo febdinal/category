@@ -25,3 +25,7 @@ Route::post('/produk/new','BEController@newproduk');
 
 Route::post('/produk/hapus/{id}','BEController@hapus')
       ->name('delete');
+
+Route::get('/produk/category','BEController@ambilcategory');
+
+Route::get('/produk/subcategory/{id_category}','BEController@ambilsubcategory');

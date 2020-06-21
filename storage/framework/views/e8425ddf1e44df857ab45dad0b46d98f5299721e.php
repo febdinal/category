@@ -22,7 +22,7 @@
     <body class="container">
         <div class="row mt-4">
             <div class="col-4 card bg-white container py-4">
-                <table border="5" >    
+                <table border="5">    
                     <div class="name container">
                         <h2> Product </h2>
                         <b> New Product </b>
@@ -51,19 +51,12 @@
                             </div>
                             <div class="form-group" >
                                 <lable for=" "> Category : </lable>
-                                <select id="category" name="category">
-                                    <option value="pakaian">Pakaian</option>
-                                    <option value="art">ART</option>
-                                    <option value="akasesoris">Aksesoris</option>
+                                <select onchange="ambilsubcategory()" id="category" name="category">
                                 </select>
                             </div>
                             <div class="form-group" >
                                 <lable for=" "> SubCategory : </lable>
-                                <select id="subcategory" name="subcategory">
-                                    <option value="tas">Tas</option>
-                                    <option value="kaos">Kaos</option>
-                                    <option value="hoodie">Hoodie</option>
-                                    <option value="stiker">stiker</option>
+                                <select id="subcategory" name="subcategory" >
                                 </select>
                             </div>
                             <div>
@@ -78,7 +71,13 @@
             <div class="col-8">
                 <table class="table table-bordered" id="tabelBE">
                     <thead>
-                        <td colspan="8" ><center><h3> List Product</h3></td>
+                        <style>
+                            .dataTable > thead > tr > th[class*="sort"]:before,
+                            .dataTable > thead > tr > th[class*="sort"]:after {
+                                content: "" !important;
+                            }
+                       </style>
+                        <td colspan="8"><center><h3> List Product</h3></td>
                         <tr>
                             <th>Id</th>
                             <th>Title Product</th>
@@ -105,6 +104,34 @@
         <script src="<?php echo e(asset('assets/plugins/daterangepicker/daterangepicker.js')); ?>"></script>
 
         <script type="text/javascript">
+
+            function info(title){
+                var n = title.toString();
+                    alert(n);   
+            }
+
+            function ambilsubcategory()
+            {
+                console.log('ok');
+                $('#subcategory').empty()
+                var dropDown = document.getElementById("category");
+                var id_category = dropDown.options[dropDown.selectedIndex].value;
+                $.ajax({
+                        type: "get",
+                        url: "/produk/subcategory/"+ id_category,
+                        data: { 'id_category': id_category  },
+                        success: function(data){
+                            // Parse the returned json data
+                            var opts=$.parseJSON(data);
+                            // Use jQuery's each to iterate over the opts value
+                            $.each(opts, function(i, d) {
+                                // You will need to alter the below to get the right values from your json object.  Guessing that d.id / d.modelName are columns in your carModels data
+                                $('#subcategory').append('<option value="'+d.id_subcategory+'">'+d.name +'</option>');
+                            });
+                        }
+                    }); 
+            }
+
             function hapus(id) {
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},    
@@ -113,11 +140,11 @@
                     data:{"id":id, "_token":"<?php echo e(csrf_token()); ?>"},
                     success: function(data)
                     {
-                        alert('berhasil gan');
+                        $('#tabelBE').DataTable().ajax.reload();
                     }
                 })
             }
-
+            
             $(function() {
                 $('#tabelBE').DataTable({
                     processing: true,
@@ -134,15 +161,29 @@
                         { data: 'action' , name: 'action' ,orderable:false , searchable:false}
                     ]
                 });
-            });
 
-            // $('#submitButton').click( function() {
-            //     $.post( '/produk/newproduk', $('#tabelBE').serialize(), function(data) {
-            //             // ... do something with response from server
-            //     },
-            //             'json' // I expect a JSON response
-            //           );
-            // });
+                $('#category').empty()
+                $.ajax({
+                        type: "get",
+                        url: "/produk/category",
+                        success: function(data){
+                            // Parse the returned json data
+                            var opts = $.parseJSON(data);
+                            // Use jQuery's each to iterate over the opts value
+                            $.each(opts, function(i, d) {
+                                // You will need to alter the below to get the right values from your json object.  Guessing that d.id / d.modelName are columns in your carModels data
+                                $('#category').append('<option value="'+d.id_category+'">'+d.name+'</option>');
+                            });
+                        }
+                    });
+
+                $('#category').change(function(){
+                    var conceptVal = $("#category option:selected").val();
+                    $(this).children("option:selected").val();
+                        alert(conceptVal);
+
+                    });
+            });
 
             $('#submitButton').click( function() {
                 $.ajax({
@@ -155,25 +196,9 @@
                         $('#tabelBE').DataTable().ajax.reload();
                     }
                 });
-            });
-
-            // $(document).on('click', '.delete',function(){
-            //     var id = $(this).attr("id");
-            //    if(confirm("wish to delete?"))
-            //    { 
-            //         $.ajax({
-            //                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},    
-            //                 url: "/produk/hapus/{id}",
-            //                 method:"post",
-            //                 data:{"id":id, "_token":"<?php echo e(csrf_token()); ?>"},
-            //                 success: function(data)
-            //                 {
-            //                     $('#message').html(data);
-            //                 }
-            //         })
-            //     }
-            // });     
-
+            });     
+            
+            
         </script>   
     </body>
 </html><?php /**PATH E:\Laravel\category\resources\views/index.blade.php ENDPATH**/ ?>
